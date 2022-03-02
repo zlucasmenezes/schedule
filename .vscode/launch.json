@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "name": "Dart (example\\schedule_example.dart)",
+            "type": "dart",
+            "request": "launch",
+            "program": "example\\schedule_example.dart"
+        }
+    ]
+}
