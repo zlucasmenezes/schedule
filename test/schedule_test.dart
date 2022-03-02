@@ -57,4 +57,44 @@ void main() {
       expect(schedule.roles, expectedRoles);
     });
   });
+
+  group("Should add people", () {
+    int month = DateTime.january;
+    int year = 2022;
+    Schedule schedule = Schedule(month: month, year: year);
+    String name = 'Lucas';
+
+    test('Should add person', () {
+      Person person = Person(name: name);
+      schedule.addPerson(person);
+
+      expect(schedule.people, [person]);
+    });
+
+    test('Should add person with specific availability', () {
+      Person person = Person(name: name, availability: [2, 9]);
+      schedule.addPerson(person);
+
+      expect(schedule.people, [person]);
+    });
+
+    test('Should add person with wrong availability', () {
+      Person person = Person(name: name, availability: [1, 8]);
+      schedule.addPerson(person);
+
+      expect(schedule.people, [person]);
+      expect(schedule.people[0].availability, []);
+    });
+
+    test('Should update person\'s availability when add the same person', () {
+      schedule.addPerson(Person(name: name, availability: [2, 9]));
+
+      expect(schedule.people[0].availability, [2, 9]);
+
+      schedule.addPerson(Person(name: name, availability: [2, 16]));
+
+      expect(schedule.people.length, 1);
+      expect(schedule.people[0].availability, [2, 16]);
+    });
+  });
 }
