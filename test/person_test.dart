@@ -20,8 +20,18 @@ void main() {
 
     test('Should create an instance with specific availability', () {
       List<int> availability = [1, 2, 3, 4];
+
       expect(Person(name: name, availability: availability).availability,
           availability);
+    });
+  });
+
+  group("Should be null safety", () {
+    test("availability", () {
+      List<int>? availability;
+      Person person = Person(name: 'Name', availability: availability);
+
+      expect(person, isA<Person>());
     });
   });
 }

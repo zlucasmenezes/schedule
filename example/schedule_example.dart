@@ -2,6 +2,7 @@ import 'package:schedule/schedule.dart';
 
 void main() {
   Schedule schedule = Schedule(
+    title: 'ESCALA LIVE',
     roles: ['OBS/YOUTUBE', 'DIREÇÃO/CORTE/CÂMERA 1', 'CÂMERA 2', 'CÂMERA 3'],
     month: 3,
     year: 2022,

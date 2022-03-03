@@ -4,29 +4,38 @@ class Schedule {
   late Map<int, List<String>> _schedule;
   late List<int> _days;
 
+  final String _title;
   final List<Person> _people = [];
   final List<String> _roles;
   final int _month;
   final int _year;
 
   Schedule({
-    List<String> roles = const ['Role 1', 'Role 2', 'Role 3', 'Role 4'],
+    String? title,
+    List<String>? roles,
     int? month,
     int? year,
-  })  : _roles = roles,
+  })  : _title = title ?? 'Schedule',
+        _roles = roles ?? ['Role 1', 'Role 2', 'Role 3', 'Role 4'],
         _month = month ?? DateTime.now().month,
         _year = year ?? DateTime.now().year {
     _days = _getDays(month: _month, year: _year);
     _schedule = {for (var day in _days) day: []};
   }
 
+  String get title => _title;
   List<Person> get people => _people;
   List<int> get days => _days;
   int get month => _month;
   int get year => _year;
   List<String> get roles => _roles;
 
-  addPerson(Person person) {
+  addPerson(Person? person) {
+    if (person == null) {
+      print('Person can not be null');
+      return;
+    }
+
     if (!person.availability.every((day) => _days.contains(day))) {
       print('Not all of available days of ${person.name} are on the schedule');
       person.availability =
@@ -44,7 +53,7 @@ class Schedule {
     _people.add(person);
   }
 
-  buildSchedule() {
+  Map<int, List<String>> buildSchedule() {
     for (var k = 0; k <= 100; k++) {
       for (var i = 1; i <= _days.length; i++) {
         List<Person> availablePeople =
@@ -67,25 +76,33 @@ class Schedule {
         }
       }
     }
+
+    return _schedule;
   }
 
   @override
-  String toString({String title = 'Schedule'}) {
-    String text = '$title - ${_month.toString().padLeft(2, '0')}/$_year\n===\n';
+  String toString() {
+    var buffer = StringBuffer();
+
+    buffer.write(
+      '$_title - ${_month.toString().padLeft(2, '0')}/$_year\n===\n',
+    );
 
     for (var day in _days) {
       List<String> includedOnes = _schedule[day]!;
 
-      text +=
-          '\n${day.toString().padLeft(2, '0')}/${_month.toString().padLeft(2, '0')}\n';
+      buffer.write(
+        '\n${day.toString().padLeft(2, '0')}/${_month.toString().padLeft(2, '0')}\n',
+      );
 
       for (var i = 0; i < _roles.length; i++) {
-        text +=
-            '- ${_roles[i]}: ${includedOnes.length > i ? includedOnes[i] : ""}\n';
+        buffer.write(
+          '- ${_roles[i]}: ${includedOnes.length > i ? includedOnes[i] : ""}\n',
+        );
       }
     }
 
-    return text;
+    return buffer.toString();
   }
 
   List<int> _getDays({required int month, required int year}) {

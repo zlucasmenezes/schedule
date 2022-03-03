@@ -58,6 +58,19 @@ void main() {
     });
   });
 
+  group("Should create an instance of Schedule with specific title", () {
+    String title = 'Title';
+    Schedule schedule = Schedule(title: title);
+
+    test('Should instance exists', () {
+      expect(schedule, isA<Schedule>());
+    });
+
+    test('Should title be correct', () {
+      expect(schedule.title, title);
+    });
+  });
+
   group("Should add people", () {
     int month = DateTime.january;
     int year = 2022;
@@ -99,6 +112,66 @@ void main() {
 
       expect(schedule.people.length, 1);
       expect(schedule.people[0].availability, [2, 16]);
+    });
+  });
+
+  group("Should build schedule", () {
+    late Schedule schedule;
+
+    setUp(() {
+      schedule = Schedule(
+        roles: ['Role 1', 'Role 2'],
+        month: 3,
+        year: 2022,
+      );
+    });
+
+    test("Should build a complete schedule", () {
+      schedule.addPerson(Person(name: 'Kevin', availability: schedule.days));
+      schedule.addPerson(Person(name: 'Iva', availability: schedule.days));
+      schedule.addPerson(Person(name: 'Jean', availability: schedule.days));
+      schedule.addPerson(Person(name: 'Ina', availability: schedule.days));
+      schedule.addPerson(Person(name: 'Virgie', availability: schedule.days));
+      schedule.addPerson(Person(name: 'Georgie', availability: schedule.days));
+      schedule.addPerson(Person(name: 'Sue', availability: schedule.days));
+      schedule.addPerson(Person(name: 'Leonard', availability: schedule.days));
+
+      var builtSchedule = schedule.buildSchedule();
+
+      expect(builtSchedule[6]!.length, schedule.roles.length);
+      expect(builtSchedule[13]!.length, schedule.roles.length);
+      expect(builtSchedule[20]!.length, schedule.roles.length);
+      expect(builtSchedule[27]!.length, schedule.roles.length);
+    });
+
+    test("Should build an incomplete schedule", () {
+      schedule.addPerson(Person(name: 'Kevin', availability: [6]));
+      schedule.addPerson(Person(name: 'Iva', availability: [6]));
+      schedule.addPerson(Person(name: 'Jean', availability: [13]));
+      schedule.addPerson(Person(name: 'Virgie', availability: [20]));
+      schedule.addPerson(Person(name: 'Sue', availability: [27]));
+      schedule.addPerson(Person(name: 'Leonard', availability: [27]));
+
+      var builtSchedule = schedule.buildSchedule();
+
+      expect(builtSchedule[6]!.length, schedule.roles.length);
+      expect(builtSchedule[13]!.length, schedule.roles.length - 1);
+      expect(builtSchedule[20]!.length, schedule.roles.length - 1);
+      expect(builtSchedule[27]!.length, schedule.roles.length);
+    });
+  });
+
+  group("Should be null safety", () {
+    test("Schedule", () {
+      expect(
+        Schedule(roles: null, month: null, year: null, title: null),
+        isA<Schedule>(),
+      );
+    });
+
+    test("addPerson", () {
+      var schedule = Schedule();
+      expect(schedule.addPerson(null), null);
     });
   });
 }
