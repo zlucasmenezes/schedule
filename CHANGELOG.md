@@ -1,3 +1,3 @@
-## 0.0.0
+## 0.0.1
 
-- Initial version.
+- Create a simple schedule taking into consideration the people's availability.
