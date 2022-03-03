@@ -44,6 +44,50 @@ class Schedule {
     _people.add(person);
   }
 
+  buildSchedule() {
+    for (var k = 0; k <= 100; k++) {
+      for (var i = 1; i <= _days.length; i++) {
+        List<Person> availablePeople =
+            _people.where((p) => p.availability.length == i).toList();
+        availablePeople.shuffle();
+
+        for (var person in availablePeople) {
+          for (var j = 0; j < i; j++) {
+            List<String> daySchedule = _schedule[person.availability[j]]!;
+
+            if (daySchedule.length < _roles.length) {
+              if (!daySchedule.contains(person.name)) {
+                daySchedule.add(person.name);
+                daySchedule.shuffle();
+                _schedule[person.availability[j]] = daySchedule;
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @override
+  String toString({String title = 'Schedule'}) {
+    String text = '$title - ${_month.toString().padLeft(2, '0')}/$_year\n===\n';
+
+    for (var day in _days) {
+      List<String> includedOnes = _schedule[day]!;
+
+      text +=
+          '\n${day.toString().padLeft(2, '0')}/${_month.toString().padLeft(2, '0')}\n';
+
+      for (var i = 0; i < _roles.length; i++) {
+        text +=
+            '- ${_roles[i]}: ${includedOnes.length > i ? includedOnes[i] : ""}\n';
+      }
+    }
+
+    return text;
+  }
+
   List<int> _getDays({required int month, required int year}) {
     return [for (var i = 0; i < DateTime(year, month + 1, 0).day; i++) i]
         .where((day) => DateTime(year, month, day).weekday == DateTime.sunday)

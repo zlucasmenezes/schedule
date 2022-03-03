@@ -61,8 +61,12 @@ void main() {
   group("Should add people", () {
     int month = DateTime.january;
     int year = 2022;
-    Schedule schedule = Schedule(month: month, year: year);
     String name = 'Lucas';
+    late Schedule schedule;
+
+    setUp(() {
+      schedule = Schedule(month: month, year: year);
+    });
 
     test('Should add person', () {
       Person person = Person(name: name);
