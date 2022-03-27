@@ -1,7 +1,7 @@
 import 'person.dart';
 
 class Schedule {
-  late Map<int, List<String>> _schedule;
+  late Map<int, Map<String, String?>> _schedule;
   late List<int> _days;
 
   final String _title;
@@ -20,7 +20,12 @@ class Schedule {
         _month = month ?? DateTime.now().month,
         _year = year ?? DateTime.now().year {
     _days = _getDays(month: _month, year: _year);
-    _schedule = {for (var day in _days) day: []};
+    _schedule = {
+      for (var day in _days)
+        day: {
+          for (var role in _roles) role: null,
+        },
+    };
   }
 
   String get title => _title;
@@ -53,21 +58,27 @@ class Schedule {
     _people.add(person);
   }
 
-  Map<int, List<String>> buildSchedule() {
+  Map<int, Map<String, String?>> buildSchedule() {
     for (var k = 0; k <= 100; k++) {
       for (var i = 1; i <= _days.length; i++) {
         List<Person> availablePeople =
             _people.where((p) => p.availability.length == i).toList();
-        availablePeople.shuffle();
 
         for (var person in availablePeople) {
           for (var j = 0; j < i; j++) {
-            List<String> daySchedule = _schedule[person.availability[j]]!;
+            Map<String, String?> daySchedule = {
+              ..._schedule[person.availability[j]]!
+            };
 
-            if (daySchedule.length < _roles.length) {
-              if (!daySchedule.contains(person.name)) {
-                daySchedule.add(person.name);
-                daySchedule.shuffle();
+            if (daySchedule.values.whereType<String>().length < _roles.length) {
+              if (!daySchedule.containsValue(person.name)) {
+                for (var role in _roles) {
+                  if (daySchedule[role] == null) {
+                    daySchedule[role] = person.name;
+                    break;
+                  }
+                }
+
                 _schedule[person.availability[j]] = daySchedule;
                 break;
               }
@@ -89,7 +100,7 @@ class Schedule {
     );
 
     for (var day in _days) {
-      List<String> includedOnes = _schedule[day]!;
+      Map<String, String?> includedOnes = _schedule[day]!;
 
       buffer.write(
         '\n${day.toString().padLeft(2, '0')}/${_month.toString().padLeft(2, '0')}\n',
@@ -97,7 +108,7 @@ class Schedule {
 
       for (var i = 0; i < _roles.length; i++) {
         buffer.write(
-          '- ${_roles[i]}: ${includedOnes.length > i ? includedOnes[i] : ""}\n',
+          '- ${_roles[i]}: ${includedOnes[_roles[i]] ?? ""}\n',
         );
       }
     }

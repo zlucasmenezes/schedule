@@ -2,46 +2,46 @@ import 'package:schedule/schedule.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group("Should create an instance of Schedule", () {
+  group("It should create an instance of Schedule", () {
     Schedule schedule = Schedule();
 
-    test('Should instance exists', () {
+    test('It should instance exists', () {
       expect(schedule, isA<Schedule>());
     });
 
-    test('Should month be current', () {
+    test('It should month be current', () {
       expect(schedule.month, DateTime.now().month);
     });
 
-    test('Should year be current', () {
+    test('It should year be current', () {
       expect(schedule.year, DateTime.now().year);
     });
   });
 
-  group("Should create an instance of Schedule with specific month", () {
+  group("It should create an instance of Schedule with specific month", () {
     int month = DateTime.january;
     int year = 2022;
     List<int> expectedDays = [2, 9, 16, 23, 30];
     Schedule schedule = Schedule(month: month, year: year);
 
-    test('Should instance exists', () {
+    test('It should instance exists', () {
       expect(schedule, isA<Schedule>());
     });
 
-    test('Should month be correct', () {
+    test('It should month be correct', () {
       expect(schedule.month, month);
     });
 
-    test('Should year be correct', () {
+    test('It should year be correct', () {
       expect(schedule.year, year);
     });
 
-    test('Should get days of month', () {
+    test('It should get days of month', () {
       expect(schedule.days, expectedDays);
     });
   });
 
-  group("Should create an instance of Schedule with specific roles", () {
+  group("It should create an instance of Schedule with specific roles", () {
     List<String> expectedRoles = [
       'Specific role 1',
       'Specific role 2',
@@ -49,29 +49,29 @@ void main() {
     ];
     Schedule schedule = Schedule(roles: expectedRoles);
 
-    test('Should instance exists', () {
+    test('It should instance exists', () {
       expect(schedule, isA<Schedule>());
     });
 
-    test('Should roles be correct', () {
+    test('It should roles be correct', () {
       expect(schedule.roles, expectedRoles);
     });
   });
 
-  group("Should create an instance of Schedule with specific title", () {
+  group("It should create an instance of Schedule with specific title", () {
     String title = 'Title';
     Schedule schedule = Schedule(title: title);
 
-    test('Should instance exists', () {
+    test('It should instance exists', () {
       expect(schedule, isA<Schedule>());
     });
 
-    test('Should title be correct', () {
+    test('It should title be correct', () {
       expect(schedule.title, title);
     });
   });
 
-  group("Should add people", () {
+  group("It should add people", () {
     int month = DateTime.january;
     int year = 2022;
     String name = 'Lucas';
@@ -81,21 +81,21 @@ void main() {
       schedule = Schedule(month: month, year: year);
     });
 
-    test('Should add person', () {
+    test('It should add person', () {
       Person person = Person(name: name);
       schedule.addPerson(person);
 
       expect(schedule.people, [person]);
     });
 
-    test('Should add person with specific availability', () {
+    test('It should add person with specific availability', () {
       Person person = Person(name: name, availability: [2, 9]);
       schedule.addPerson(person);
 
       expect(schedule.people, [person]);
     });
 
-    test('Should add person with wrong availability', () {
+    test('It should add person with wrong availability', () {
       Person person = Person(name: name, availability: [1, 8]);
       schedule.addPerson(person);
 
@@ -103,7 +103,8 @@ void main() {
       expect(schedule.people[0].availability, []);
     });
 
-    test('Should update person\'s availability when add the same person', () {
+    test('It should update person\'s availability when add the same person',
+        () {
       schedule.addPerson(Person(name: name, availability: [2, 9]));
 
       expect(schedule.people[0].availability, [2, 9]);
@@ -115,7 +116,7 @@ void main() {
     });
   });
 
-  group("Should build schedule", () {
+  group("It should build schedule", () {
     late Schedule schedule;
 
     setUp(() {
@@ -126,7 +127,7 @@ void main() {
       );
     });
 
-    test("Should build a complete schedule", () {
+    test("It should build a complete schedule", () {
       schedule.addPerson(Person(name: 'Kevin', availability: schedule.days));
       schedule.addPerson(Person(name: 'Iva', availability: schedule.days));
       schedule.addPerson(Person(name: 'Jean', availability: schedule.days));
@@ -136,15 +137,16 @@ void main() {
       schedule.addPerson(Person(name: 'Sue', availability: schedule.days));
       schedule.addPerson(Person(name: 'Leonard', availability: schedule.days));
 
-      var builtSchedule = schedule.buildSchedule();
+      var builtSchedule = schedule.buildSchedule().map((key, value) =>
+          MapEntry(key, value.values.whereType<String>().length));
 
-      expect(builtSchedule[6]!.length, schedule.roles.length);
-      expect(builtSchedule[13]!.length, schedule.roles.length);
-      expect(builtSchedule[20]!.length, schedule.roles.length);
-      expect(builtSchedule[27]!.length, schedule.roles.length);
+      expect(builtSchedule[6], schedule.roles.length);
+      expect(builtSchedule[13], schedule.roles.length);
+      expect(builtSchedule[20], schedule.roles.length);
+      expect(builtSchedule[27], schedule.roles.length);
     });
 
-    test("Should build an incomplete schedule", () {
+    test("It should build an incomplete schedule", () {
       schedule.addPerson(Person(name: 'Kevin', availability: [6]));
       schedule.addPerson(Person(name: 'Iva', availability: [6]));
       schedule.addPerson(Person(name: 'Jean', availability: [13]));
@@ -152,16 +154,17 @@ void main() {
       schedule.addPerson(Person(name: 'Sue', availability: [27]));
       schedule.addPerson(Person(name: 'Leonard', availability: [27]));
 
-      var builtSchedule = schedule.buildSchedule();
+      var builtSchedule = schedule.buildSchedule().map((key, value) =>
+          MapEntry(key, value.values.whereType<String>().length));
 
-      expect(builtSchedule[6]!.length, schedule.roles.length);
-      expect(builtSchedule[13]!.length, schedule.roles.length - 1);
-      expect(builtSchedule[20]!.length, schedule.roles.length - 1);
-      expect(builtSchedule[27]!.length, schedule.roles.length);
+      expect(builtSchedule[6], schedule.roles.length);
+      expect(builtSchedule[13], schedule.roles.length - 1);
+      expect(builtSchedule[20], schedule.roles.length - 1);
+      expect(builtSchedule[27], schedule.roles.length);
     });
   });
 
-  group("Should be null safety", () {
+  group("It should be null safety", () {
     test("Schedule", () {
       expect(
         Schedule(roles: null, month: null, year: null, title: null),
