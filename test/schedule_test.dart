@@ -118,49 +118,102 @@ void main() {
 
   group("It should build schedule", () {
     late Schedule schedule;
+    List<String> roles = ['Role 1', 'Role 2'];
 
     setUp(() {
       schedule = Schedule(
-        roles: ['Role 1', 'Role 2'],
+        roles: roles,
         month: 3,
         year: 2022,
       );
     });
 
     test("It should build a complete schedule", () {
-      schedule.addPerson(Person(name: 'Kevin', availability: schedule.days));
-      schedule.addPerson(Person(name: 'Iva', availability: schedule.days));
-      schedule.addPerson(Person(name: 'Jean', availability: schedule.days));
-      schedule.addPerson(Person(name: 'Ina', availability: schedule.days));
-      schedule.addPerson(Person(name: 'Virgie', availability: schedule.days));
-      schedule.addPerson(Person(name: 'Georgie', availability: schedule.days));
-      schedule.addPerson(Person(name: 'Sue', availability: schedule.days));
-      schedule.addPerson(Person(name: 'Leonard', availability: schedule.days));
+      schedule.addPerson(
+        Person(name: 'Kevin', availability: schedule.days, roles: roles),
+      );
+      schedule.addPerson(
+        Person(name: 'Iva', availability: schedule.days, roles: roles),
+      );
+      schedule.addPerson(
+        Person(name: 'Jean', availability: schedule.days, roles: roles),
+      );
+      schedule.addPerson(
+        Person(name: 'Ina', availability: schedule.days, roles: roles),
+      );
+      schedule.addPerson(
+        Person(name: 'Virgie', availability: schedule.days, roles: roles),
+      );
+      schedule.addPerson(
+        Person(name: 'Georgie', availability: schedule.days, roles: roles),
+      );
+      schedule.addPerson(
+        Person(name: 'Sue', availability: schedule.days, roles: roles),
+      );
+      schedule.addPerson(
+        Person(name: 'Leonard', availability: schedule.days, roles: roles),
+      );
 
-      var builtSchedule = schedule.buildSchedule().map((key, value) =>
-          MapEntry(key, value.values.whereType<String>().length));
+      var builtSchedule = schedule.buildSchedule();
+      print(builtSchedule);
 
-      expect(builtSchedule[6], schedule.roles.length);
-      expect(builtSchedule[13], schedule.roles.length);
-      expect(builtSchedule[20], schedule.roles.length);
-      expect(builtSchedule[27], schedule.roles.length);
+      expect(
+        builtSchedule[6]!.values.whereType<String>().length,
+        schedule.roles.length,
+      );
+      expect(
+        builtSchedule[13]!.values.whereType<String>().length,
+        schedule.roles.length,
+      );
+      expect(
+        builtSchedule[20]!.values.whereType<String>().length,
+        schedule.roles.length,
+      );
+      expect(
+        builtSchedule[27]!.values.whereType<String>().length,
+        schedule.roles.length,
+      );
     });
 
     test("It should build an incomplete schedule", () {
-      schedule.addPerson(Person(name: 'Kevin', availability: [6]));
-      schedule.addPerson(Person(name: 'Iva', availability: [6]));
-      schedule.addPerson(Person(name: 'Jean', availability: [13]));
-      schedule.addPerson(Person(name: 'Virgie', availability: [20]));
-      schedule.addPerson(Person(name: 'Sue', availability: [27]));
-      schedule.addPerson(Person(name: 'Leonard', availability: [27]));
+      schedule.addPerson(
+        Person(name: 'Kevin', availability: [6], roles: roles),
+      );
+      schedule.addPerson(
+        Person(name: 'Iva', availability: [6], roles: roles),
+      );
+      schedule.addPerson(
+        Person(name: 'Jean', availability: [13], roles: roles),
+      );
+      schedule.addPerson(
+        Person(name: 'Virgie', availability: [20], roles: roles),
+      );
+      schedule.addPerson(
+        Person(name: 'Sue', availability: [27], roles: roles),
+      );
+      schedule.addPerson(
+        Person(name: 'Leonard', availability: [27], roles: roles),
+      );
 
-      var builtSchedule = schedule.buildSchedule().map((key, value) =>
-          MapEntry(key, value.values.whereType<String>().length));
+      var builtSchedule = schedule.buildSchedule();
+      print(builtSchedule);
 
-      expect(builtSchedule[6], schedule.roles.length);
-      expect(builtSchedule[13], schedule.roles.length - 1);
-      expect(builtSchedule[20], schedule.roles.length - 1);
-      expect(builtSchedule[27], schedule.roles.length);
+      expect(
+        builtSchedule[6]!.values.whereType<String>().length,
+        schedule.roles.length,
+      );
+      expect(
+        builtSchedule[13]!.values.whereType<String>().length,
+        schedule.roles.length - 1,
+      );
+      expect(
+        builtSchedule[20]!.values.whereType<String>().length,
+        schedule.roles.length - 1,
+      );
+      expect(
+        builtSchedule[27]!.values.whereType<String>().length,
+        schedule.roles.length,
+      );
     });
   });
 

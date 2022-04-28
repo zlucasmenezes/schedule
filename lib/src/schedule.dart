@@ -59,28 +59,38 @@ class Schedule {
   }
 
   Map<int, Map<String, String?>> buildSchedule() {
-    for (var k = 0; k <= 100; k++) {
-      for (var i = 1; i <= _days.length; i++) {
-        List<Person> availablePeople =
-            _people.where((p) => p.availability.length == i).toList();
+    var people = _people;
+    people.sort(((a, b) => (a.roles.length + a.availability.length)
+        .compareTo(b.roles.length + b.availability.length)));
 
-        for (var person in availablePeople) {
-          for (var j = 0; j < i; j++) {
-            Map<String, String?> daySchedule = {
-              ..._schedule[person.availability[j]]!
-            };
+    for (var i = 0; i <= 100; i++) {
+      if (i > 0) {
+        people.shuffle();
+      }
+      personLoop:
+      for (var person in people) {
+        roleLoop:
+        for (var role in person.roles) {
+          for (var day in person.availability) {
+            Map<String, String?> daySchedule = {..._schedule[day]!};
 
             if (daySchedule.values.whereType<String>().length < _roles.length) {
-              if (!daySchedule.containsValue(person.name)) {
-                for (var role in _roles) {
-                  if (daySchedule[role] == null) {
-                    daySchedule[role] = person.name;
-                    break;
+              var n = 0;
+              for (var schedule in _schedule.values) {
+                if (schedule.containsValue(person.name)) {
+                  n++;
+                  if (n >= 2) {
+                    break personLoop;
                   }
                 }
+              }
 
-                _schedule[person.availability[j]] = daySchedule;
-                break;
+              if (!daySchedule.containsValue(person.name)) {
+                if (daySchedule[role] == null && person.roles.contains(role)) {
+                  daySchedule[role] = person.name;
+                  _schedule[day] = daySchedule;
+                  break roleLoop;
+                }
               }
             }
           }
