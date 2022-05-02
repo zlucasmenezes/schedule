@@ -9,16 +9,19 @@ class Schedule {
   final List<String> _roles;
   final int _month;
   final int _year;
+  final int _repeat;
 
   Schedule({
     String? title,
     List<String>? roles,
     int? month,
     int? year,
+    int? repeat,
   })  : _title = title ?? 'Schedule',
         _roles = roles ?? ['Role 1', 'Role 2', 'Role 3', 'Role 4'],
         _month = month ?? DateTime.now().month,
-        _year = year ?? DateTime.now().year {
+        _year = year ?? DateTime.now().year,
+        _repeat = repeat ?? 1 {
     _days = _getDays(month: _month, year: _year);
     _schedule = {
       for (var day in _days)
@@ -33,13 +36,24 @@ class Schedule {
   List<int> get days => _days;
   int get month => _month;
   int get year => _year;
+  int get repeat => _repeat;
   List<String> get roles => _roles;
 
-  addPerson(Person? person) {
-    if (person == null) {
-      print('Person can not be null');
+  addPerson({
+    required name,
+    List<int>? availability,
+    List<String>? roles,
+  }) {
+    if (name == null) {
+      print('name can not be null');
       return;
     }
+
+    Person person = Person(
+      name: name,
+      availability: availability ?? _days,
+      roles: roles ?? _roles,
+    );
 
     if (!person.availability.every((day) => _days.contains(day))) {
       print('Not all of available days of ${person.name} are on the schedule');
@@ -47,11 +61,19 @@ class Schedule {
           person.availability.where((day) => _days.contains(day)).toList();
     }
 
+    if (!person.roles.every((role) => _roles.contains(role))) {
+      print('Not all of roles of ${person.name} are on the schedule');
+      person.roles =
+          person.roles.where((role) => _roles.contains(role)).toList();
+    }
+
     int index = _people
         .indexWhere((p) => p.name.toLowerCase() == person.name.toLowerCase());
     if (index >= 0) {
-      print('${person.name} has already been added. Updating available days.');
+      print(
+          '${person.name} has already been added. Updating available days and roles.');
       _people[index].availability = person.availability;
+      _people[index].roles = person.roles;
       return;
     }
 
@@ -63,7 +85,7 @@ class Schedule {
     people.sort(((a, b) => (a.roles.length + a.availability.length)
         .compareTo(b.roles.length + b.availability.length)));
 
-    for (var i = 0; i <= 100; i++) {
+    for (var i = 0; i < repeat; i++) {
       if (i > 0) {
         people.shuffle();
       }
@@ -75,11 +97,11 @@ class Schedule {
             Map<String, String?> daySchedule = {..._schedule[day]!};
 
             if (daySchedule.values.whereType<String>().length < _roles.length) {
-              var n = 0;
+              var repeat = 0;
               for (var schedule in _schedule.values) {
                 if (schedule.containsValue(person.name)) {
-                  n++;
-                  if (n >= 2) {
+                  repeat++;
+                  if (repeat >= _repeat) {
                     break personLoop;
                   }
                 }
