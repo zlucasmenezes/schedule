@@ -1,7 +1,7 @@
 import 'person.dart';
 
 class Schedule {
-  late Map<int, List<String>> _schedule;
+  late Map<int, Map<String, String?>> _schedule;
   late List<int> _days;
 
   final String _title;
@@ -9,18 +9,26 @@ class Schedule {
   final List<String> _roles;
   final int _month;
   final int _year;
+  final int _repeat;
 
   Schedule({
     String? title,
     List<String>? roles,
     int? month,
     int? year,
+    int? repeat,
   })  : _title = title ?? 'Schedule',
         _roles = roles ?? ['Role 1', 'Role 2', 'Role 3', 'Role 4'],
         _month = month ?? DateTime.now().month,
-        _year = year ?? DateTime.now().year {
+        _year = year ?? DateTime.now().year,
+        _repeat = repeat ?? 1 {
     _days = _getDays(month: _month, year: _year);
-    _schedule = {for (var day in _days) day: []};
+    _schedule = {
+      for (var day in _days)
+        day: {
+          for (var role in _roles) role: null,
+        },
+    };
   }
 
   String get title => _title;
@@ -28,13 +36,24 @@ class Schedule {
   List<int> get days => _days;
   int get month => _month;
   int get year => _year;
+  int get repeat => _repeat;
   List<String> get roles => _roles;
 
-  addPerson(Person? person) {
-    if (person == null) {
-      print('Person can not be null');
+  addPerson({
+    required name,
+    List<int>? availability,
+    List<String>? roles,
+  }) {
+    if (name == null) {
+      print('name can not be null');
       return;
     }
+
+    Person person = Person(
+      name: name,
+      availability: availability ?? _days,
+      roles: roles ?? _roles,
+    );
 
     if (!person.availability.every((day) => _days.contains(day))) {
       print('Not all of available days of ${person.name} are on the schedule');
@@ -42,34 +61,58 @@ class Schedule {
           person.availability.where((day) => _days.contains(day)).toList();
     }
 
+    if (!person.roles.every((role) => _roles.contains(role))) {
+      print('Not all of roles of ${person.name} are on the schedule');
+      person.roles =
+          person.roles.where((role) => _roles.contains(role)).toList();
+    }
+
     int index = _people
         .indexWhere((p) => p.name.toLowerCase() == person.name.toLowerCase());
     if (index >= 0) {
-      print('${person.name} has already been added. Updating available days.');
+      print(
+          '${person.name} has already been added. Updating available days and roles.');
       _people[index].availability = person.availability;
+      _people[index].roles = person.roles;
       return;
     }
 
     _people.add(person);
   }
 
-  Map<int, List<String>> buildSchedule() {
-    for (var k = 0; k <= 100; k++) {
-      for (var i = 1; i <= _days.length; i++) {
-        List<Person> availablePeople =
-            _people.where((p) => p.availability.length == i).toList();
-        availablePeople.shuffle();
+  Map<int, Map<String, String?>> buildSchedule() {
+    var people = _people;
+    people.sort(((a, b) => (a.roles.length + a.availability.length)
+        .compareTo(b.roles.length + b.availability.length)));
 
-        for (var person in availablePeople) {
-          for (var j = 0; j < i; j++) {
-            List<String> daySchedule = _schedule[person.availability[j]]!;
+    for (var i = 0; i < repeat; i++) {
+      if (i > 0) {
+        people.shuffle();
+      }
+      personLoop:
+      for (var person in people) {
+        roleLoop:
+        for (var role in person.roles) {
+          for (var day in person.availability) {
+            Map<String, String?> daySchedule = {..._schedule[day]!};
 
-            if (daySchedule.length < _roles.length) {
-              if (!daySchedule.contains(person.name)) {
-                daySchedule.add(person.name);
-                daySchedule.shuffle();
-                _schedule[person.availability[j]] = daySchedule;
-                break;
+            if (daySchedule.values.whereType<String>().length < _roles.length) {
+              var repeat = 0;
+              for (var schedule in _schedule.values) {
+                if (schedule.containsValue(person.name)) {
+                  repeat++;
+                  if (repeat >= _repeat) {
+                    break personLoop;
+                  }
+                }
+              }
+
+              if (!daySchedule.containsValue(person.name)) {
+                if (daySchedule[role] == null && person.roles.contains(role)) {
+                  daySchedule[role] = person.name;
+                  _schedule[day] = daySchedule;
+                  break roleLoop;
+                }
               }
             }
           }
@@ -89,7 +132,7 @@ class Schedule {
     );
 
     for (var day in _days) {
-      List<String> includedOnes = _schedule[day]!;
+      Map<String, String?> includedOnes = _schedule[day]!;
 
       buffer.write(
         '\n${day.toString().padLeft(2, '0')}/${_month.toString().padLeft(2, '0')}\n',
@@ -97,7 +140,7 @@ class Schedule {
 
       for (var i = 0; i < _roles.length; i++) {
         buffer.write(
-          '- ${_roles[i]}: ${includedOnes.length > i ? includedOnes[i] : ""}\n',
+          '- ${_roles[i]}: ${includedOnes[_roles[i]] ?? ""}\n',
         );
       }
     }

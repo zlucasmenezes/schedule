@@ -1,6 +1,6 @@
 name: schedule
 description: A package to build the schedule of the communication ministry of the Evangelical Congregational Church of Vila Paraíso in Brazil.
-version: 0.0.1
+version: 0.1.0
 
 repository: https://github.com/zlucasmenezes/schedule
 
@@ -8,5 +8,5 @@ environment:
   sdk: '>=2.16.1 <3.0.0'
 
 dev_dependencies:
-  lints: ^1.0.0
-  test: ^1.16.0
+  lints: ^1.0.1
+  test: ^1.21.1
