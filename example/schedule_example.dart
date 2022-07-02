@@ -11,7 +11,7 @@ void main() {
   Schedule schedule = Schedule(
     title: 'ESCALA LIVE',
     roles: roles,
-    month: 5,
+    month: 7,
     year: 2022,
     repeat: 2,
   );
@@ -23,7 +23,7 @@ void main() {
 
   schedule.addPerson(
     name: 'Anne',
-    availability: [8, 15, 22, 29],
+    availability: [10],
     roles: [
       roles[1],
       roles[2],
@@ -32,6 +32,7 @@ void main() {
   );
   schedule.addPerson(
     name: 'Bea',
+    availability: [10, 17, 24, 31],
     roles: [
       roles[1],
       roles[2],
@@ -40,13 +41,14 @@ void main() {
   );
   schedule.addPerson(
     name: 'Carlos',
+    availability: [3, 10, 17, 24, 31],
     roles: [
       roles[1],
     ],
   );
   schedule.addPerson(
     name: 'Carol',
-    availability: [29],
+    availability: [],
     roles: [
       roles[1],
       roles[2],
@@ -55,18 +57,19 @@ void main() {
   );
   schedule.addPerson(
     name: 'Débora',
-    availability: [1, 15, 29],
+    availability: [17, 31],
   );
   schedule.addPerson(
     name: 'Dimis',
-    availability: [8, 22],
+    availability: [],
   );
   schedule.addPerson(
     name: 'Gabriel',
+    availability: [3, 10, 17, 24, 31],
   );
   schedule.addPerson(
     name: 'Giovanna',
-    availability: [15, 22, 29],
+    availability: [3, 10, 17, 24, 31],
     roles: [
       roles[1],
       roles[2],
@@ -75,6 +78,7 @@ void main() {
   );
   schedule.addPerson(
     name: 'Isabel',
+    availability: [10, 31],
     roles: [
       roles[1],
       roles[2],
@@ -83,7 +87,7 @@ void main() {
   );
   schedule.addPerson(
     name: 'Júlia',
-    availability: [1, 29],
+    availability: [10, 24, 31],
     roles: [
       roles[1],
       roles[2],
@@ -92,7 +96,7 @@ void main() {
   );
   schedule.addPerson(
     name: 'Letícia',
-    availability: [8, 15, 22],
+    availability: [3, 10, 24, 31],
     roles: [
       roles[1],
       roles[2],
@@ -101,15 +105,15 @@ void main() {
   );
   schedule.addPerson(
     name: 'Lucas',
-    availability: [22],
+    availability: [24, 31],
   );
   schedule.addPerson(
     name: 'LF',
-    availability: [1, 15, 29],
+    availability: [3, 17, 31],
   );
   schedule.addPerson(
     name: 'Manu',
-    availability: [15, 22],
+    availability: [3, 10],
     roles: [
       roles[1],
       roles[2],
@@ -118,7 +122,7 @@ void main() {
   );
   schedule.addPerson(
     name: 'Sara',
-    availability: [1, 22, 23],
+    availability: [],
     roles: [
       roles[1],
     ],
