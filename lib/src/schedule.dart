@@ -149,7 +149,7 @@ class Schedule {
   }
 
   List<int> _getDays({required int month, required int year}) {
-    return [for (var i = 0; i < DateTime(year, month + 1, 0).day; i++) i]
+    return [for (var i = 1; i <= DateTime(year, month + 1, 0).day; i++) i]
         .where((day) => DateTime(year, month, day).weekday == DateTime.sunday)
         .toList();
   }
