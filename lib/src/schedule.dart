@@ -56,6 +56,7 @@ class Schedule {
     required name,
     List<int>? availability,
     List<String>? roles,
+    int? priority,
   }) {
     if (name == null) {
       print('name can not be null');
@@ -66,6 +67,7 @@ class Schedule {
       name: name,
       availability: availability ?? _days,
       roles: roles ?? _roles,
+      priority: priority ?? 0,
     );
 
     if (!person.availability.every((day) => _days.contains(day))) {
@@ -97,6 +99,7 @@ class Schedule {
     var people = _people;
     people.sort(((a, b) => (a.roles.length + a.availability.length)
         .compareTo(b.roles.length + b.availability.length)));
+    people.sort((a, b) => b.priority.compareTo(a.priority));
 
     for (var i = 0; i < repeat; i++) {
       if (i > 0) {

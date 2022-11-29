@@ -78,6 +78,7 @@ void main() {
       roles[2],
       roles[3],
     ],
+    priority: 2,
   );
 
   schedule.addPerson(
@@ -146,6 +147,7 @@ void main() {
       roles[2],
       roles[3],
     ],
+    priority: 1,
   );
 
   schedule.addPerson(
@@ -163,6 +165,7 @@ void main() {
       roles[2],
       roles[3],
     ],
+    priority: 1,
   );
 
   print('People: ${schedule.people.map((person) => person.name).toList()}');
