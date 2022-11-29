@@ -29,10 +29,20 @@ void main() {
       expect(person.roles, []);
     });
 
+    test('It should priority be correct', () {
+      expect(person.priority, 0);
+    });
+
     test('It should create an instance with specific roles', () {
       List<String> roles = ['Role 1', 'Role 2'];
 
       expect(Person(name: name, roles: roles).roles, roles);
+    });
+
+    test('It should create an instance with specific priority', () {
+      int priority = 1;
+
+      expect(Person(name: name, priority: priority).priority, priority);
     });
   });
 
