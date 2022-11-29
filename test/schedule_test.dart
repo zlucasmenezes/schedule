@@ -10,6 +10,11 @@ void main() {
       expect(schedule, isA<Schedule>());
     });
 
+    test('It should get all days in month', () {
+      expect(schedule.days.length,
+          DateTime(schedule.year, schedule.month + 1, 0).day);
+    });
+
     test('It should month be current', () {
       expect(schedule.month, DateTime.now().month);
     });
@@ -23,11 +28,25 @@ void main() {
     });
   });
 
+  group("It should create an instance of Schedule with specific days", () {
+    List<int> expectedDays = [1, 2, 3, 4, 5];
+    Schedule schedule = Schedule(days: expectedDays);
+
+    test('It should instance exists', () {
+      expect(schedule, isA<Schedule>());
+    });
+
+    test('It should get days of month', () {
+      expect(schedule.days, expectedDays);
+    });
+  });
+
   group("It should create an instance of Schedule with specific month", () {
     int month = DateTime.january;
     int year = 2022;
     List<int> expectedDays = [2, 9, 16, 23, 30];
-    Schedule schedule = Schedule(month: month, year: year);
+    Schedule schedule =
+        Schedule(month: month, year: year, daysOfWeek: [DateTime.sunday]);
 
     test('It should instance exists', () {
       expect(schedule, isA<Schedule>());
@@ -97,7 +116,11 @@ void main() {
     List<String> roles = ['Role 1', 'Role 2'];
 
     setUp(() {
-      schedule = Schedule(month: month, year: year, roles: roles);
+      schedule = Schedule(
+          month: month,
+          year: year,
+          roles: roles,
+          daysOfWeek: [DateTime.sunday]);
     });
 
     test('It should add person', () {
@@ -176,10 +199,7 @@ void main() {
 
     setUp(() {
       schedule = Schedule(
-        roles: roles,
-        month: 3,
-        year: 2022,
-      );
+          roles: roles, month: 3, year: 2022, daysOfWeek: [DateTime.sunday]);
     });
 
     test("It should build a complete schedule", () {
@@ -297,7 +317,8 @@ void main() {
     });
 
     test("It should build schedule repeating people", () {
-      schedule = Schedule(month: 3, year: 2022, repeat: 4);
+      schedule = Schedule(
+          month: 3, year: 2022, repeat: 4, daysOfWeek: [DateTime.sunday]);
       schedule.addPerson(name: 'Kevin');
       schedule.addPerson(name: 'Iva');
       schedule.addPerson(name: 'Jean');
