@@ -1,6 +1,6 @@
 name: schedule
 description: A package to build the schedule of the communication ministry of the Evangelical Congregational Church of Vila Paraíso in Brazil.
-version: 0.1.1
+version: 0.2.0
 
 repository: https://github.com/zlucasmenezes/schedule
 
