@@ -29,6 +29,7 @@ void main() {
       roles[2],
       roles[3],
     ],
+    priority: 1,
   );
   schedule.addPerson(
     name: 'Bea',
@@ -45,6 +46,7 @@ void main() {
     roles: [
       roles[1],
     ],
+    priority: 1,
   );
   schedule.addPerson(
     name: 'Carol',
@@ -75,6 +77,7 @@ void main() {
       roles[2],
       roles[3],
     ],
+    priority: 2,
   );
   schedule.addPerson(
     name: 'Isabel',
@@ -106,6 +109,7 @@ void main() {
   schedule.addPerson(
     name: 'Lucas',
     availability: [24, 31],
+    priority: 2,
   );
   schedule.addPerson(
     name: 'LF',
