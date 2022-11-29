@@ -9,6 +9,7 @@ class Schedule {
   final List<String> _roles;
   final int _month;
   final int _year;
+  final List<int> _daysOfWeek;
   final int _repeat;
 
   Schedule({
@@ -17,12 +18,24 @@ class Schedule {
     int? month,
     int? year,
     int? repeat,
+    List<int>? days,
+    List<int>? daysOfWeek,
   })  : _title = title ?? 'Schedule',
         _roles = roles ?? ['Role 1', 'Role 2', 'Role 3', 'Role 4'],
         _month = month ?? DateTime.now().month,
         _year = year ?? DateTime.now().year,
-        _repeat = repeat ?? 1 {
-    _days = _getDays(month: _month, year: _year);
+        _repeat = repeat ?? 1,
+        _daysOfWeek = daysOfWeek ??
+            List<int>.from([
+              DateTime.sunday,
+              DateTime.monday,
+              DateTime.tuesday,
+              DateTime.wednesday,
+              DateTime.thursday,
+              DateTime.friday,
+              DateTime.saturday,
+            ]) {
+    _days = _getDays(month: _month, year: _year, days: days);
     _schedule = {
       for (var day in _days)
         day: {
@@ -148,9 +161,11 @@ class Schedule {
     return buffer.toString();
   }
 
-  List<int> _getDays({required int month, required int year}) {
+  List<int> _getDays({required int month, required int year, List<int>? days}) {
     return [for (var i = 1; i <= DateTime(year, month + 1, 0).day; i++) i]
-        .where((day) => DateTime(year, month, day).weekday == DateTime.sunday)
+        .where(
+            (day) => _daysOfWeek.contains(DateTime(year, month, day).weekday))
+        .where((day) => days == null || days.contains(day))
         .toList();
   }
 }
