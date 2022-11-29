@@ -9,6 +9,7 @@ class Schedule {
   final List<String> _roles;
   final int _month;
   final int _year;
+  final List<int> _daysOfWeek;
   final int _repeat;
 
   Schedule({
@@ -17,12 +18,24 @@ class Schedule {
     int? month,
     int? year,
     int? repeat,
+    List<int>? days,
+    List<int>? daysOfWeek,
   })  : _title = title ?? 'Schedule',
         _roles = roles ?? ['Role 1', 'Role 2', 'Role 3', 'Role 4'],
         _month = month ?? DateTime.now().month,
         _year = year ?? DateTime.now().year,
-        _repeat = repeat ?? 1 {
-    _days = _getDays(month: _month, year: _year);
+        _repeat = repeat ?? 1,
+        _daysOfWeek = daysOfWeek ??
+            List<int>.from([
+              DateTime.sunday,
+              DateTime.monday,
+              DateTime.tuesday,
+              DateTime.wednesday,
+              DateTime.thursday,
+              DateTime.friday,
+              DateTime.saturday,
+            ]) {
+    _days = _getDays(month: _month, year: _year, days: days);
     _schedule = {
       for (var day in _days)
         day: {
@@ -43,6 +56,7 @@ class Schedule {
     required name,
     List<int>? availability,
     List<String>? roles,
+    int? priority,
   }) {
     if (name == null) {
       print('name can not be null');
@@ -53,6 +67,7 @@ class Schedule {
       name: name,
       availability: availability ?? _days,
       roles: roles ?? _roles,
+      priority: priority ?? 0,
     );
 
     if (!person.availability.every((day) => _days.contains(day))) {
@@ -84,6 +99,7 @@ class Schedule {
     var people = _people;
     people.sort(((a, b) => (a.roles.length + a.availability.length)
         .compareTo(b.roles.length + b.availability.length)));
+    people.sort((a, b) => b.priority.compareTo(a.priority));
 
     for (var i = 0; i < repeat; i++) {
       if (i > 0) {
@@ -148,9 +164,11 @@ class Schedule {
     return buffer.toString();
   }
 
-  List<int> _getDays({required int month, required int year}) {
+  List<int> _getDays({required int month, required int year, List<int>? days}) {
     return [for (var i = 1; i <= DateTime(year, month + 1, 0).day; i++) i]
-        .where((day) => DateTime(year, month, day).weekday == DateTime.sunday)
+        .where(
+            (day) => _daysOfWeek.contains(DateTime(year, month, day).weekday))
+        .where((day) => days == null || days.contains(day))
         .toList();
   }
 }

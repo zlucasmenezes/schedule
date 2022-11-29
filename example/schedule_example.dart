@@ -11,7 +11,9 @@ void main() {
   Schedule schedule = Schedule(
     title: 'ESCALA LIVE',
     roles: roles,
-    month: 7,
+    daysOfWeek: [DateTime.sunday],
+    days: [4, 11, 18],
+    month: DateTime.december,
     year: 2022,
     repeat: 2,
   );
@@ -23,109 +25,147 @@ void main() {
 
   schedule.addPerson(
     name: 'Anne',
-    availability: [10],
+    availability: [18],
     roles: [
       roles[1],
       roles[2],
       roles[3],
     ],
   );
+
   schedule.addPerson(
     name: 'Bea',
-    availability: [10, 17, 24, 31],
     roles: [
       roles[1],
       roles[2],
       roles[3],
     ],
   );
+
   schedule.addPerson(
-    name: 'Carlos',
-    availability: [3, 10, 17, 24, 31],
-    roles: [
-      roles[1],
-    ],
+    name: 'Branco',
+    roles: [roles[0]],
   );
+
   schedule.addPerson(
-    name: 'Carol',
-    availability: [],
+    name: 'Carlos Gabriel',
+    availability: [4],
     roles: [
       roles[1],
       roles[2],
       roles[3],
     ],
   );
+
   schedule.addPerson(
     name: 'Débora',
-    availability: [17, 31],
+    availability: [11, 18],
   );
+
   schedule.addPerson(
     name: 'Dimis',
     availability: [],
   );
+
   schedule.addPerson(
     name: 'Gabriel',
-    availability: [3, 10, 17, 24, 31],
   );
+
   schedule.addPerson(
     name: 'Giovanna',
-    availability: [3, 10, 17, 24, 31],
     roles: [
       roles[1],
       roles[2],
       roles[3],
     ],
+    priority: 2,
   );
+
   schedule.addPerson(
     name: 'Isabel',
-    availability: [10, 31],
     roles: [
       roles[1],
       roles[2],
       roles[3],
     ],
   );
+
+  schedule.addPerson(
+    name: 'Jorge',
+    availability: [],
+    roles: [
+      roles[1],
+      roles[2],
+      roles[3],
+    ],
+  );
+
   schedule.addPerson(
     name: 'Júlia',
-    availability: [10, 24, 31],
+    availability: [4, 18],
     roles: [
       roles[1],
       roles[2],
       roles[3],
     ],
   );
+
   schedule.addPerson(
     name: 'Letícia',
-    availability: [3, 10, 24, 31],
+    availability: [4, 18],
     roles: [
       roles[1],
       roles[2],
       roles[3],
     ],
   );
+
   schedule.addPerson(
     name: 'Lucas',
-    availability: [24, 31],
+    availability: [],
   );
+
   schedule.addPerson(
     name: 'LF',
-    availability: [3, 17, 31],
+    availability: [11, 18],
   );
+
   schedule.addPerson(
     name: 'Manu',
-    availability: [3, 10],
+    availability: [],
     roles: [
       roles[1],
       roles[2],
       roles[3],
     ],
   );
+
+  schedule.addPerson(
+    name: 'Milla',
+    roles: [
+      roles[1],
+      roles[2],
+      roles[3],
+    ],
+    priority: 1,
+  );
+
   schedule.addPerson(
     name: 'Sara',
     availability: [],
     roles: [
       roles[1],
     ],
+  );
+
+  schedule.addPerson(
+    name: 'Théo',
+    roles: [
+      roles[1],
+      roles[2],
+      roles[3],
+    ],
+    priority: 1,
   );
 
   print('People: ${schedule.people.map((person) => person.name).toList()}');
